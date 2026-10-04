@@ -1,0 +1,28 @@
+﻿# .NET
+**/bin/
+**/obj/
+dist/
+artifacts/
+TestResults/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# Local files
+*.log
+Thumbs.db
+.DS_Store
+
+# Generated releases
+RF4AssistantPro_v*.exe
+RF4AssistantPro_v*_win-x64.zip
+RF4AssistantPro_v*_Source.zip
+*.zip.sha256
+*.exe.sha256

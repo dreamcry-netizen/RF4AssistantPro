@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RF4Assistant.Core\RF4Assistant.Core.csproj" />
+    <ProjectReference Include="..\RF4Assistant.Infrastructure\RF4Assistant.Infrastructure.csproj" />
+    <Compile Include="..\RF4AssistantPro\ViewModels\WaterBodyDetailViewModel.cs"
+             Link="Production\WaterBodyDetailViewModel.cs" />
+    <Compile Include="..\RF4AssistantPro\WaterBodies\WaterBodyCatalogRegistry.cs"
+             Link="Production\WaterBodyCatalogRegistry.cs" />
+    <Compile Include="..\RF4AssistantPro\ViewModels\ObservableCollectionReplaceHelper.cs"
+             Link="Production\ObservableCollectionReplaceHelper.cs" />
+  </ItemGroup>
+
+</Project>

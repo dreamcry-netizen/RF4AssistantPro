@@ -1,0 +1,1852 @@
+<UserControl
+    x:Class="RF4AssistantPro.Views.StatisticsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{StaticResource WindowBackgroundBrush}">
+    <UserControl.Resources>
+        <Style x:Key="CardStyle"
+               TargetType="Border"
+               BasedOn="{StaticResource SectionCardStyle}">
+            <Setter Property="Margin" Value="0,0,16,16"/>
+        </Style>
+        <Style x:Key="PrimaryButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#4E96EF"/>
+            <Setter Property="BorderBrush" Value="#63A8FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,8"/>
+        </Style>
+        <Style x:Key="ToolbarButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource SubtleButtonStyle}">
+            <Setter Property="Padding" Value="13,7"/>
+        </Style>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#98A3B3"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="NavChrome"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="10">
+                                <Border.RenderTransform>
+                                    <ScaleTransform x:Name="NavScale" ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+                                <ContentPresenter
+                                    Margin="2,0"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            </Border>
+                            <Border x:Name="ActiveMarker"
+                                    Width="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Margin="0,5"
+                                    Background="{StaticResource AccentBrush}"
+                                    CornerRadius="2"
+                                    Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavChrome" Property="Background" Value="#202731"/>
+                                <Setter TargetName="NavChrome" Property="BorderBrush" Value="#344253"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleX" To="1.015" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleY" To="1.015" Duration="0:0:0.12"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.12"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavChrome" Property="Background" Value="#1B304B"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleX" To="0.99" Duration="0:0:0.04"/>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleY" To="0.99" Duration="0:0:0.04"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.08"/>
+                                            <DoubleAnimation Storyboard.TargetName="NavScale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.08"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="Background" Value="#1B304B">
+                                <Setter TargetName="ActiveMarker" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="NavChrome" Property="BorderBrush" Value="#3B6EA8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SmallLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#7E8A9A"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F5F7FA"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="236"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border
+            Grid.Column="0"
+            Background="#0E1115"
+            BorderBrush="#222B35"
+            BorderThickness="0,0,1,0">
+            <DockPanel LastChildFill="True">
+                <StackPanel
+                    x:Name="SidebarNavigationPanel"
+                    DockPanel.Dock="Top"
+                    Margin="18,24,18,0">
+                    <StackPanel Orientation="Horizontal" Margin="8,0,0,32">
+                        <Border
+                            Width="36"
+                            Height="36"
+                            Background="#63A8FF"
+                            CornerRadius="10"
+                            Padding="3">
+                            <Image
+                                Stretch="Uniform"
+                                Source="/RF4AssistantPro;component/Assets/AppIcon.ico"/>
+                        </Border>
+                        <StackPanel
+                            x:Name="SidebarBrandText"
+                            Margin="11,1,0,0">
+                            <TextBlock FontSize="15" FontWeight="SemiBold" Text="RF4 Assistant"/>
+                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding VersionLabel}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <TextBlock
+                        x:Name="WorkspaceSectionLabel"
+                        Margin="12,0,0,9"
+                        Foreground="#697586"
+                        FontSize="10"
+                        FontWeight="SemiBold"
+                        Text="РАБОЧЕЕ ПРОСТРАНСТВО"/>
+                    <Button
+                        x:Name="OverviewButton"
+                        Click="OverviewClick"
+                        Style="{StaticResource NavButtonStyle}"
+                        Background="#1B304B"
+                        Foreground="#F5F7FA">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#172A43" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#63A8FF" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE80F;"/></Border>
+                            <TextBlock FontWeight="SemiBold" Text="Обзор"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="CatchesButton"
+                        Click="CatchesClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE8F1;"/></Border>
+                            <TextBlock Text="Уловы"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="WaterBodiesButton"
+                        Click="WaterBodiesClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE707;"/></Border>
+                            <TextBlock Text="Водоёмы"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="CafeButton"
+                        Click="CafeClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE7B8;"/></Border>
+                            <TextBlock Text="Кафе"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="KeepnetButton"
+                        Click="KeepnetClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xEA37;"/></Border>
+                            <TextBlock Text="Садок"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="BaitsButton"
+                        Click="BaitsClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE8A5;"/></Border>
+                            <TextBlock Text="Наживки"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="FishCatalogButton"
+                        Click="FishCatalogClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE8B1;"/></Border>
+                            <TextBlock Text="Каталог рыбы"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="AnalyticsButton"
+                        Click="AnalyticsClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE9D2;"/></Border>
+                            <TextBlock Text="Аналитика"/>
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock
+                        x:Name="SystemSectionLabel"
+                        Margin="12,27,0,9"
+                        Foreground="#697586"
+                        FontSize="10"
+                        FontWeight="SemiBold"
+                        Text="СИСТЕМА"/>
+                    <Button
+                        x:Name="SettingsButton"
+                        Click="SettingsClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE713;"/></Border>
+                            <TextBlock Text="Настройки"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="HelpButton"
+                        Click="HelpClick"
+                        Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="30" Height="30" Margin="0,0,8,0" Background="#171C22" CornerRadius="8"><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#98A3B3" FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE897;"/></Border>
+                            <TextBlock Text="Помощь"/>
+                        </StackPanel>
+                    </Button>
+                    <Button
+                        x:Name="SidebarToggleButton"
+                        Margin="0,18,0,0"
+                        HorizontalAlignment="Left"
+                        Click="ToggleSidebarClick"
+                        Style="{StaticResource FluentIconButtonStyle}"
+                        Content="&#xE76B;"
+                        ToolTip="Свернуть навигацию"/>
+                </StackPanel>
+
+                <Border
+                    x:Name="GameStatusCard"
+                    DockPanel.Dock="Bottom"
+                    Margin="16,0,16,18"
+                    Padding="12"
+                    Background="#12171D"
+                    BorderBrush="#28313C"
+                    BorderThickness="1"
+                    CornerRadius="11">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse
+                                Width="8"
+                                Height="8"
+                                Margin="0,0,8,0"
+                                Fill="#72BC8F"/>
+                            <TextBlock FontWeight="SemiBold" Text="Игра подключена"/>
+                        </StackPanel>
+                        <TextBlock
+                            Margin="0,7,0,0"
+                            Style="{StaticResource SmallLabelStyle}"
+                            Text="{Binding GameBindingStatus}"
+                            TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <Grid x:Name="WorkspaceGrid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="76"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Border
+                Grid.Row="0"
+                Padding="32,0"
+                BorderBrush="#222B35"
+                BorderThickness="0,0,0,1">
+                <DockPanel LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="Рабочее пространство"/>
+                        <TextBlock x:Name="PageTitleText" Margin="0,2,0,0" FontSize="19" FontWeight="SemiBold" Text="/  Обзор"/>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ImportCommand}"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="⇧  Импорт"
+                            ToolTip="Восстановить данные из RF4 backup"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ExportCommand}"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="⇩  Экспорт"
+                            ToolTip="Создать резервную копию данных"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Click="BindGameClick"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="⌘  Привязать игру"
+                            ToolTip="Найти запущенное окно Russian Fishing 4"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Click="CaptureScreenshotClick"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Content="◉  Быстрый снимок"
+                            MinWidth="160"
+                            ToolTip="Снимок карточки улова · Space"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <ScrollViewer
+                x:Name="MainScrollViewer"
+                Grid.Row="1"
+                Padding="32,28,32,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock
+                        Foreground="#63A8FF"
+                        FontSize="11"
+                        FontWeight="Bold"
+                        Text="ЦЕНТР УПРАВЛЕНИЯ"/>
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        FontSize="32"
+                        FontWeight="SemiBold"
+                        Text="Добрый день"/>
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        Foreground="#98A3B3"
+                        Text="Все последние уловы и подсказки — в одном месте."/>
+
+                    <Grid Margin="0,22,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.45*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Background="#12171D">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Border
+                                        Style="{StaticResource StatusBadgeStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="7" Height="7" Margin="0,0,6,0" Fill="#72BC8F"/>
+                                            <TextBlock Foreground="#8FC1FF" FontSize="11" FontWeight="Bold" Text="ОКНО ИГРЫ АКТИВНО"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Margin="0,12,0,0" FontSize="24" FontWeight="SemiBold" Text="Сегодня на воде"/>
+                                    <TextBlock Margin="0,5,0,0" Foreground="#AAB4C2" Text="Нажмите Space, чтобы сохранить карточку поимки."/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,22,0,0">
+                                        <StackPanel Margin="0,0,34,0">
+                                            <TextBlock FontSize="25" FontWeight="Bold" Text="{Binding Summary.TotalCatches}"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="уловов за период"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,34,0">
+                                            <TextBlock FontSize="25" FontWeight="Bold" Text="{Binding Summary.BestWeightDisplay}"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="лучший улов"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock FontSize="25" FontWeight="Bold" Foreground="#EAC26B" Text="{Binding Summary.AverageWeightDisplay}"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="средний вес"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                                        <Button
+                                            Width="205"
+                                            Height="42"
+                                            Click="CaptureScreenshotClick"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            Content="◉  Сделать снимок улова"
+                                            />
+                                        <Button
+                                            Width="125"
+                                            Height="42"
+                                            Margin="8,0,0,0"
+                                            Click="CaptureCafeClick"
+                                            Content="▣  Скрин кафе"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <Button
+                                            Width="165"
+                                            Height="42"
+                                            Click="ArmBaitRecognitionClick"
+                                            Content="⌖  Определить наживку"
+                                            ToolTip="Активировать одноразовый снимок снасти по клавише V"/>
+                                        <Button
+                                            Width="165"
+                                            Height="42"
+                                            Margin="8,0,0,0"
+                                            Click="ArmWaterBodyRecognitionClick"
+                                            Content="⌖  Определить водоём"
+                                            ToolTip="Активировать одноразовый снимок карты по клавише M"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="18,4,0,0"
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource SmallLabelStyle}"
+                                    Text="Готово к Space"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Следующее действие"/>
+                                    <Border DockPanel.Dock="Right" Padding="8,5" Background="#172A43" CornerRadius="12">
+                                        <TextBlock Foreground="#8FC1FF" FontSize="11" Text="3 шага"/>
+                                    </Border>
+                                </DockPanel>
+                                <StackPanel Margin="0,15,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                        <Border Width="24" Height="24" Background="#183528" CornerRadius="12">
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#72BC8F" Text="✓"/>
+                                        </Border>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock FontWeight="SemiBold" Text="Игра подключена"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="Окно RF4 найдено"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                        <Border Width="24" Height="24" Background="#183528" CornerRadius="12">
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#72BC8F" Text="✓"/>
+                                        </Border>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock FontWeight="SemiBold" Text="OCR готов"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="Русский язык активен"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="24" Height="24" Background="#2A2B20" CornerRadius="12">
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#EAC26B" Text="3"/>
+                                        </Border>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock FontWeight="SemiBold" Text="Проверьте кафе"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="Снимок даст предложения"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <UniformGrid Columns="4" Margin="0,0,0,0">
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="ЛУЧШИЙ УЛОВ"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20" FontWeight="Bold" Text="{Binding Summary.BestFish}"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding Summary.BestWeightDisplay}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="ЛУЧШИЙ ВОДОЁМ"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20" FontWeight="Bold" Text="{Binding Summary.BestWaterBody}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="по максимальному улову"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="СРЕДНИЙ ВЕС"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20" FontWeight="Bold" Text="{Binding Summary.AverageWeightDisplay}"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="за выбранный период"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="ИСТОЧНИК ДАННЫХ"/>
+                                <TextBlock
+                                    Margin="0,7,0,0"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Text="{Binding DataSourceLabel}"
+                                    TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="локальная история"/>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,14" Padding="14">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Style="{StaticResource SectionTitleStyle}"
+                                    Text="Последние рыбы"/>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    HorizontalAlignment="Right"
+                                    Style="{StaticResource SmallLabelStyle}"
+                                    Text="карточки уловов"
+                                    TextTrimming="CharacterEllipsis"/>
+                            </Grid>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding VisibleCatches}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Width="190" Height="104" Margin="0,0,10,0"
+                                                    Padding="10"
+                                                    Background="#151A20"
+                                                    BorderBrush="#2B3642"
+                                                    BorderThickness="1"
+                                                    CornerRadius="10">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="44"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Width="38" Height="38" Background="#182C24" CornerRadius="19" VerticalAlignment="Top">
+                                                        <Grid>
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="🐟"/>
+                                                            <Image Margin="4" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                        <TextBlock FontWeight="SemiBold" Text="{Binding FishName}" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Margin="0,4,0,0" Foreground="#63A8FF" FontSize="18" FontWeight="Bold" Text="{Binding WeightDisplay}"/>
+                                                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding WaterBodyName}" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding CaughtAt, StringFormat={}{0:dd.MM HH:mm}}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.45*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            x:Name="CatchesSection"
+                            Grid.Column="0"
+                            Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,48,0"
+                                        Style="{StaticResource SectionTitleStyle}"
+                                        Text="Последние уловы"/>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="48,0,0,0"
+                                        Foreground="#63A8FF"
+                                        VerticalAlignment="Center"
+                                        Text="Обновляется после Space"/>
+                                </Grid>
+                                <DataGrid
+                                    MaxHeight="260"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    HeadersVisibility="Column"
+                                    IsReadOnly="True"
+                                    ItemsSource="{Binding VisibleCatches}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding CaughtAt, StringFormat={}{0:dd.MM HH:mm}}" Header="Время" Width="94"/>
+                                        <DataGridTemplateColumn Header="Рыба" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                            <Grid>
+                                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                                <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                            </Grid>
+                                                        </Border>
+                                                        <TextBlock VerticalAlignment="Center" Text="{Binding FishName}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Binding="{Binding WaterBodyName}" Header="Водоём" Width="1.4*"/>
+                                        <DataGridTemplateColumn Header="Наживка" Width="165">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Width="28" Height="28" Margin="0,2,7,2"
+                                                               Source="{Binding BaitImagePath}" Stretch="Uniform"/>
+                                                        <TextBlock VerticalAlignment="Center"
+                                                                   Text="{Binding BaitName}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Binding="{Binding WeightDisplay}" Header="Вес" Width="100"/>
+                                        <DataGridTextColumn Binding="{Binding Quality}" Header="Статус" Width="110"/>
+                                        <DataGridTextColumn Binding="{Binding CafeMark}" Header="Кафе" Width="65"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            x:Name="CafeSection"
+                            Grid.Column="1"
+                            Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,11">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Margin="0,0,22,0"
+                                        Style="{StaticResource SectionTitleStyle}"
+                                        Text="Кафе сегодня"/>
+                                    <Button
+                                        Grid.Column="1"
+                                        MinWidth="112"
+                                        Padding="12,5"
+                                        Click="CaptureCafeClick"
+                                        Content="Скрин кафе"/>
+                                    <Button
+                                        Grid.Column="2"
+                                        MinWidth="118"
+                                        Margin="8,0,0,0"
+                                        Padding="12,5"
+                                        Click="ImportCafeClick"
+                                        Content="Открыть PNG"
+                                        ToolTip="Повторно распознать сохранённый снимок кафе"/>
+                                    <Button
+                                        Grid.Column="3"
+                                        MinWidth="112"
+                                        Margin="8,0,0,0"
+                                        Padding="12,5"
+                                        Click="CafeOcrAliasesClick"
+                                        Content="OCR-словарь"
+                                        ToolTip="Просмотреть и изменить обученные названия"/>
+                                </Grid>
+                                <Border Style="{StaticResource InlineInfoBarStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Margin="0,0,9,0" Foreground="#CFE8D8" FontSize="17" Text="✦"/>
+                                        <StackPanel>
+                                            <TextBlock FontWeight="SemiBold" Text="Совпадения с уловами"/>
+                                            <TextBlock Style="{StaticResource SmallLabelStyle}" Text="Равный вес тоже подходит"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <ItemsControl Margin="0,12,0,0" ItemsSource="{Binding CafeSnapshots}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Margin="0,0,0,8"
+                                                Padding="9"
+                                                Background="#151A20"
+                                                BorderBrush="#28313C"
+                                                BorderThickness="1"
+                                                CornerRadius="9"
+                                                Cursor="Hand"
+                                                MouseLeftButtonUp="CafeThumbnailClick">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="64"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image
+                                                        Grid.Column="0"
+                                                        Width="54"
+                                                        Height="40"
+                                                        Source="{Binding ThumbnailImage}"
+                                                        Stretch="UniformToFill"/>
+                                                    <StackPanel Grid.Column="1" Margin="10,0,5,0">
+                                                        <TextBlock FontWeight="SemiBold" Text="{Binding CapturedAtText}"/>
+                                                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding OfferCount, StringFormat=Предложений: {0}}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                                        <TextBlock HorizontalAlignment="Right" Foreground="#72BC8F" FontSize="17" FontWeight="Bold" Text="{Binding MatchedCatchCount}"/>
+                                                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="совпадений"/>
+                                                    </StackPanel>
+                                                    <Button
+                                                        Grid.Column="3"
+                                                        Width="30"
+                                                        Height="30"
+                                                        Margin="10,5,0,0"
+                                                        Padding="0"
+                                                        VerticalAlignment="Top"
+                                                        Click="DeleteCafeSnapshotClick"
+                                                        Content="✕"
+                                                        ToolTip="Удалить снимок"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.1*"/>
+                            <ColumnDefinition Width="0.9*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="AnalyticsSection"
+                            Grid.Column="0"
+                            Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SectionTitleStyle}" Text="Рейтинг водоёмов"/>
+                                <DataGrid
+                                    Margin="0,12,0,0"
+                                    MaxHeight="200"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    HeadersVisibility="Column"
+                                    IsReadOnly="True"
+                                    ItemsSource="{Binding WaterBodies}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Rank}" Header="#" Width="42"/>
+                                        <DataGridTextColumn Binding="{Binding Name}" Header="Водоём" Width="*"/>
+                                        <DataGridTextColumn Binding="{Binding CatchCount}" Header="Уловов" Width="75"/>
+                                        <DataGridTextColumn Binding="{Binding AverageWeightDisplay}" Header="Средний вес" Width="110"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="По рыбе"/>
+                                    <ItemsControl Margin="0,12,10,0" ItemsSource="{Binding FishDistribution}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,0,0,8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="74"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="28"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Label}"/>
+                                                    <ProgressBar Grid.Column="1" Height="8" Margin="7,0" Maximum="100" Value="{Binding SharePercent}"/>
+                                                    <TextBlock Grid.Column="2" HorizontalAlignment="Right" Text="{Binding Value, StringFormat={}{0:N0}}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="14,0,0,0">
+                                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="По наживке"/>
+                                    <ItemsControl Margin="0,12,0,0" ItemsSource="{Binding BaitDistribution}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,0,0,8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="74"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="28"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Label}"/>
+                                                    <ProgressBar Grid.Column="1" Height="8" Margin="7,0" Maximum="100" Value="{Binding SharePercent}"/>
+                                                    <TextBlock Grid.Column="2" HorizontalAlignment="Right" Text="{Binding Value, StringFormat={}{0:N0}}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Border Margin="0,0,0,12"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource SectionTitleStyle}"
+                                           Text="Расширенная аналитика"/>
+                                <TextBlock Grid.Column="1"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="{Binding AnalyticsSummaryText}"/>
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock FontWeight="SemiBold"
+                                               Text="Динамика по дням"/>
+                                    <DataGrid Margin="0,8,0,0"
+                                              MaxHeight="230"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              IsReadOnly="True"
+                                              ItemsSource="{Binding PeriodAnalytics}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Период"
+                                                                Binding="{Binding PeriodLabel}"
+                                                                Width="*"/>
+                                            <DataGridTextColumn Header="Уловов"
+                                                                Binding="{Binding CatchCount}"
+                                                                Width="70"/>
+                                            <DataGridTextColumn Header="Вес"
+                                                                Binding="{Binding TotalWeightDisplay}"
+                                                                Width="90"/>
+                                            <DataGridTextColumn Header="Средний"
+                                                                Binding="{Binding AverageWeightDisplay}"
+                                                                Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock FontWeight="SemiBold"
+                                               Text="По сессиям"/>
+                                    <DataGrid Margin="0,8,0,0"
+                                              MaxHeight="230"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              IsReadOnly="True"
+                                              ItemsSource="{Binding SessionAnalytics}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Сессия"
+                                                                Binding="{Binding SessionLabel}"
+                                                                Width="*"/>
+                                            <DataGridTextColumn Header="Уловов"
+                                                                Binding="{Binding CatchCount}"
+                                                                Width="70"/>
+                                            <DataGridTextColumn Header="Вес"
+                                                                Binding="{Binding TotalWeightDisplay}"
+                                                                Width="90"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock FontWeight="SemiBold"
+                                               Text="По рыбе: вес и результат"/>
+                                    <DataGrid Margin="0,8,0,0"
+                                              MaxHeight="230"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              IsReadOnly="True"
+                                              ItemsSource="{Binding FishAnalytics}">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="Рыба" Width="*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                                <Grid>
+                                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                                    <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                                </Grid>
+                                                            </Border>
+                                                            <TextBlock VerticalAlignment="Center" Text="{Binding Label}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Header="Уловов"
+                                                                Binding="{Binding CatchCount}"
+                                                                Width="70"/>
+                                            <DataGridTextColumn Header="Средний"
+                                                                Binding="{Binding AverageWeightDisplay}"
+                                                                Width="100"/>
+                                            <DataGridTextColumn Header="Лучший"
+                                                                Binding="{Binding BestWeightDisplay}"
+                                                                Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock FontWeight="SemiBold"
+                                               Text="По наживке: вес и результат"/>
+                                    <DataGrid Margin="0,8,0,0"
+                                              MaxHeight="230"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              IsReadOnly="True"
+                                              ItemsSource="{Binding BaitAnalytics}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Наживка"
+                                                                Binding="{Binding Label}"
+                                                                Width="*"/>
+                                            <DataGridTextColumn Header="Уловов"
+                                                                Binding="{Binding CatchCount}"
+                                                                Width="70"/>
+                                            <DataGridTextColumn Header="Средний"
+                                                                Binding="{Binding AverageWeightDisplay}"
+                                                                Width="100"/>
+                                            <DataGridTextColumn Header="Лучший"
+                                                                Binding="{Binding BestWeightDisplay}"
+                                                                Width="100"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Margin="0,12,0,0"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="Вес считается только для распознанных значений; пустые наживки и водоёмы не скрываются."/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel
+                        Margin="0,0,0,12"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding LoadCommand}"
+                            Content="Загрузить"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding SaveCommand}"
+                            Content="Сохранить"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding ClearCatchesCommand}"
+                            Content="Очистить уловы"/>
+                        <Button
+                            Margin="8,0,0,0"
+                            Click="OpenLogsClick"
+                            Content="Логи"/>
+                    </StackPanel>
+
+                    <Border Margin="0,0,0,12"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Text="Сессия рыбалки"/>
+                            <TextBlock Margin="0,6,0,0"
+                                       Foreground="#98A3B3"
+                                       Text="{Binding FishingSessionStatus}"
+                                       TextWrapping="Wrap"/>
+                            <StackPanel Margin="0,12,0,0"
+                                        Orientation="Horizontal">
+                                <Button Command="{Binding StartFishingSessionCommand}"
+                                        Content="Начать сессию"/>
+                                <Button Margin="8,0,0,0"
+                                        Command="{Binding StopFishingSessionCommand}"
+                                        Content="Завершить сессию"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,0,0,12"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Text="Центр диагностики"/>
+                                <TextBlock Grid.Column="1"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="{Binding Diagnostics.HealthText}"/>
+                            </Grid>
+                            <TextBlock Foreground="#98A3B3"
+                                       Text="{Binding Diagnostics.EnvironmentText}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Margin="0,4,0,0"
+                                       Foreground="#98A3B3"
+                                       Text="{Binding Diagnostics.StorageText}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Margin="0,4,0,0"
+                                       Foreground="#98A3B3"
+                                       Text="{Binding Diagnostics.MediaText}"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Margin="0,4,0,0"
+                                       Foreground="#98A3B3"
+                                       Text="{Binding Diagnostics.LogText}"
+                                       TextWrapping="Wrap"/>
+                            <StackPanel Margin="0,12,0,0"
+                                        Orientation="Horizontal">
+                                <Button Command="{Binding RefreshDiagnosticsCommand}"
+                                        Content="Обновить"/>
+                                <Button Margin="8,0,0,0"
+                                        Click="OpenLogsClick"
+                                        Content="Открыть логи"/>
+                                <Button Margin="8,0,0,0"
+                                        Click="ExportDiagnosticsClick"
+                                        Content="Создать ZIP"/>
+                                <Button Margin="8,0,0,0"
+                                        Click="OpenWindowsQaClick"
+                                        Content="Windows QA"
+                                        ToolTip="Открыть временный ручной QA-чеклист"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Margin="0,0,0,10">
+                        <TextBlock Foreground="#98A3B3" Text="{Binding StatusText}" TextWrapping="Wrap"/>
+                        <TextBlock Margin="0,4,0,0" Foreground="#98A3B3" Text="{Binding ScreenshotStatus}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="CatchesPage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock FontSize="29" FontWeight="SemiBold" Text="Уловы"/>
+                    <TextBlock Margin="0,5,0,20"
+                               Style="{StaticResource SmallLabelStyle}"
+                               Text="Сводка и история пойманной рыбы."/>
+
+                    <UniformGrid Columns="3">
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="ЛУЧШИЙ УЛОВ"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20"
+                                           FontWeight="Bold"
+                                           Text="{Binding Summary.BestFish}"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="{Binding Summary.BestWeightDisplay}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="ЛУЧШИЙ ВОДОЁМ"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20"
+                                           FontWeight="Bold"
+                                           Text="{Binding Summary.BestWaterBody}"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="по максимальному улову"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="СРЕДНИЙ ВЕС"/>
+                                <TextBlock Margin="0,7,0,0" FontSize="20"
+                                           FontWeight="Bold"
+                                           Text="{Binding Summary.AverageWeightDisplay}"/>
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="за выбранный период"/>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Margin="0,0,48,0"
+                                           Style="{StaticResource SectionTitleStyle}"
+                                           Text="Последние уловы"/>
+                                <TextBlock Grid.Column="1"
+                                           Margin="48,0,0,0"
+                                           Foreground="#63A8FF"
+                                           Text="Обновляется после Space"/>
+                            </Grid>
+                            <DataGrid AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      HeadersVisibility="Column"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding VisibleCatches}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Binding="{Binding CaughtAt, StringFormat={}{0:dd.MM HH:mm}}"
+                                        Header="Время" Width="110"/>
+                                    <DataGridTemplateColumn Header="Рыба" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                        <Grid>
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                            <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding FishName}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Binding="{Binding WaterBodyName}"
+                                                        Header="Водоём" Width="1.2*"/>
+                                    <DataGridTemplateColumn Header="Наживка" Width="180">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Width="28" Height="28"
+                                                           Margin="0,2,7,2"
+                                                           Source="{Binding BaitImagePath}"
+                                                           Stretch="Uniform"/>
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Text="{Binding BaitName}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Binding="{Binding WeightDisplay}"
+                                                        Header="Вес" Width="100"/>
+                                    <DataGridTextColumn Binding="{Binding Quality}"
+                                                        Header="Статус" Width="115"/>
+                                    <DataGridTextColumn Binding="{Binding CafeMark}"
+                                                        Header="Кафе" Width="70"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="CafePage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock FontSize="29" FontWeight="SemiBold" Text="Кафе"/>
+                            <TextBlock Margin="0,5,0,0"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="Последний снимок и пойманная рыба для заказов кафе."/>
+                        </StackPanel>
+                        <Button DockPanel.Dock="Right"
+                                MinWidth="120"
+                                Height="38"
+                                Click="CaptureCafeClick"
+                                Content="Скрин кафе"/>
+                    </DockPanel>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleStyle}"
+                                       Text="Последний снимок кафе"/>
+                            <TextBlock Margin="0,4,0,10"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="{Binding LatestCafeSnapshot.CapturedAtText}"/>
+                            <Border Height="360"
+                                    Background="#0E1115"
+                                    BorderBrush="#2B3642"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    MouseLeftButtonUp="LatestCafeImageClick">
+                                <Image Source="{Binding LatestCafeSnapshot.FullImagePath}"
+                                       Stretch="Uniform"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Margin="0,0,0,12"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Text="Пойманная рыба с пометкой «Кафе»"/>
+                            <DataGrid AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      HeadersVisibility="Column"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding CafeCatches}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Binding="{Binding CaughtAt, StringFormat={}{0:dd.MM HH:mm}}"
+                                        Header="Время" Width="115"/>
+                                    <DataGridTemplateColumn Header="Рыба" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                        <Grid>
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                            <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding FishName}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Binding="{Binding WaterBodyName}"
+                                                        Header="Водоём" Width="1.2*"/>
+                                    <DataGridTextColumn Binding="{Binding BaitName}"
+                                                        Header="Наживка" Width="160"/>
+                                    <DataGridTextColumn Binding="{Binding WeightDisplay}"
+                                                        Header="Вес" Width="100"/>
+                                    <DataGridTextColumn Binding="{Binding CafeMark}"
+                                                        Header="Пометка" Width="90"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="WaterBodiesPage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock
+                        FontSize="29"
+                        FontWeight="SemiBold"
+                        Text="Водоёмы"/>
+                    <TextBlock
+                        Margin="0,5,0,20"
+                        Style="{StaticResource SmallLabelStyle}"
+                        Text="Карточки локаций с отдельной статистикой. Нажмите карточку, чтобы открыть изображение водоёма."/>
+
+                    <ItemsControl ItemsSource="{Binding WaterBodyCatalog}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Width="250"
+                                    Margin="0,0,16,18"
+                                    Padding="0"
+                                    Cursor="Hand"
+                                    MouseLeftButtonUp="OpenWaterBodyClick"
+                                    Style="{StaticResource SectionCardStyle}"
+                                    ToolTip="{Binding Name}">
+                                    <StackPanel>
+                                        <Grid Height="296" Background="#0E1115">
+                                            <Border CornerRadius="11,11,0,0" ClipToBounds="True">
+                                                <Image Source="{Binding CardImagePath}" Stretch="Uniform"/>
+                                            </Border>
+                                            <Border
+                                                Margin="10"
+                                                Padding="8,4"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Background="#CC172A43"
+                                                CornerRadius="10">
+                                                <TextBlock Foreground="#8FC1FF" FontSize="11" FontWeight="Bold" Text="{Binding Order, StringFormat=№ {0}}"/>
+                                            </Border>
+                                        </Grid>
+                                        <StackPanel Margin="14,12,14,0">
+                                            <TextBlock FontSize="17" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Margin="0,3,0,0" Style="{StaticResource SmallLabelStyle}" Text="Открыть карточку, статистику и кафе"/>
+                                        </StackPanel>
+                                        <Grid Margin="14,12,14,14">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Statistics.CatchCount}"/>
+                                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="уловов"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock FontSize="16" FontWeight="Bold" Foreground="#8FC1FF" Text="{Binding Statistics.BestWeightDisplay}"/>
+                                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="лучший"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Statistics.UniqueFishCount}"/>
+                                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="видов"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="KeepnetPage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock FontSize="29"
+                                       FontWeight="SemiBold"
+                                       Text="Садок"/>
+                            <TextBlock Margin="0,5,0,0"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="Запись карточек рыбы и проверка по последнему снимку кафе."/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button Width="145"
+                                    Height="42"
+                                    Margin="0,0,10,0"
+                                    Click="KeepnetOcrAliasesClick"
+                                    Content="OCR-словарь"
+                                    ToolTip="Просмотреть и изменить обученные названия садка"/>
+                            <Button Width="150"
+                                    Height="42"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding ClearKeepnetCommand}"
+                                    Content="Очистить садок"/>
+                            <Button Width="190"
+                                    Height="42"
+                                    Background="#4E96EF"
+                                    Click="ArmKeepnetCaptureClick"
+                                    Content="Записать садок"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock TextWrapping="Wrap"
+                                       Foreground="#98A3B3"
+                                       Text="Нажмите «Записать садок» и переключитесь в RF4. Первое нажатие C открывает садок и запускает серию снимков каждые 3 секунды. После звукового сигнала прокручивайте список вниз. Второе нажатие C закрывает садок и завершает серию; затем программа распознает все кадры."/>
+                            <TextBlock Margin="0,10,0,0"
+                                       Foreground="#63A8FF"
+                                       Text="{Binding ScreenshotStatus}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,18,0,0"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Text="Сверка с историей"/>
+                                <TextBlock Grid.Column="1"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="{Binding KeepnetComparisonText}"/>
+                            </Grid>
+                            <TextBlock Margin="0,0,0,10"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="{Binding KeepnetReviewText}"/>
+                            <DataGrid MinHeight="150"
+                                      MaxHeight="360"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding KeepnetComparison}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Рыба" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                        <Grid>
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                            <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding FishName}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Вес"
+                                                        Width="110"
+                                                        Binding="{Binding WeightDisplay}"/>
+                                    <DataGridTextColumn Header="История"
+                                                        Width="90"
+                                                        Binding="{Binding HistoryCount}"/>
+                                    <DataGridTextColumn Header="Садок"
+                                                        Width="80"
+                                                        Binding="{Binding KeepnetCount}"/>
+                                    <DataGridTextColumn Header="Разница"
+                                                        Width="80"
+                                                        Binding="{Binding DifferenceDisplay}"/>
+                                    <DataGridTemplateColumn Header="Статус"
+                                                            Width="150">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontWeight="SemiBold"
+                                                           Foreground="{Binding StatusBrush}"
+                                                           Text="{Binding Status}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="0,18,0,0"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Text="Записанная рыба"/>
+                                <TextBlock Grid.Column="1"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="{Binding KeepnetCountText}"/>
+                            </Grid>
+                            <DataGrid x:Name="KeepnetRecordsGrid"
+                                      MinHeight="260"
+                                      MaxHeight="620"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      MouseDoubleClick="EditSelectedKeepnetDoubleClick"
+                                      ItemsSource="{Binding KeepnetRecords}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Записано"
+                                                        Width="145"
+                                                        Binding="{Binding RecordedAtDisplay}"/>
+                                    <DataGridTemplateColumn Header="Рыба" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="28" Height="28" Margin="0,2,7,2" Background="#182C24" CornerRadius="14">
+                                                        <Grid>
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Text="🐟"/>
+                                                            <Image Margin="3" Source="{Binding FishImagePath}" Stretch="Uniform"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding FishName}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Вес"
+                                                        Width="140"
+                                                        Binding="{Binding WeightDisplay}"/>
+                                    <DataGridTextColumn Header="Пометка"
+                                                        Width="130"
+                                                        Binding="{Binding CafeMark}"/>
+                                    <DataGridTemplateColumn Header="Действие" Width="110">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Margin="4,2"
+                                                        Padding="8,3"
+                                                        Tag="{Binding}"
+                                                        Click="EditKeepnetRecordClick"
+                                                        Content="Исправить"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Margin="0,10,0,0"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="При повторном снимке рыба с тем же названием и весом повторно не добавляется."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="BaitsPage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock FontSize="29" FontWeight="SemiBold" Text="Наживки"/>
+                    <TextBlock Margin="0,5,0,20"
+                               Style="{StaticResource SmallLabelStyle}"
+                               Text="Текущая наживка и управление каталогом."/>
+
+                    <Border MaxWidth="720"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Height="180"
+                                    Background="#0E1115"
+                                    CornerRadius="8">
+                                <Image Source="{Binding CurrentBaitImagePath}"
+                                       Stretch="Uniform"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="24,0,0,0">
+                                <TextBlock Style="{StaticResource SmallLabelStyle}"
+                                           Text="ТЕКУЩАЯ НАЖИВКА"/>
+                                <TextBlock Margin="0,8,0,22"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="{Binding CurrentBaitName}"/>
+                                <Button Height="40"
+                                        Click="OpenBaitCatalogClick"
+                                        Content="Каталог и редактирование наживок"/>
+                                <Button Height="40"
+                                        Margin="0,10,0,0"
+                                        Background="#4E96EF"
+                                        Click="AddBaitClick"
+                                        Content="Добавить наживку"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="0,22,0,0"
+                            MaxWidth="1100"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock FontSize="18"
+                                               FontWeight="SemiBold"
+                                               Text="Добавленные наживки"/>
+                                    <TextBlock Margin="0,4,0,0"
+                                               Style="{StaticResource SmallLabelStyle}"
+                                               Text="{Binding BaitCatalogCountText}"/>
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                        Width="170"
+                                        Height="38"
+                                        Margin="12,0,0,0"
+                                        Click="OpenBaitCatalogClick"
+                                        Content="Открыть каталог"/>
+                                <Button Grid.Column="2"
+                                        Width="170"
+                                        Height="38"
+                                        Margin="10,0,0,0"
+                                        Background="#4E96EF"
+                                        Click="AddBaitClick"
+                                        Content="+ Добавить наживку"/>
+                            </Grid>
+
+                            <StackPanel Margin="0,0,0,12"
+                                        Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="Сортировать по:"/>
+                                <ComboBox x:Name="BaitSortFieldBox"
+                                          Width="190"
+                                          Height="36"
+                                          SelectedIndex="0">
+                                    <ComboBoxItem Tag="DisplayName"
+                                                  Content="Названию"/>
+                                    <ComboBoxItem Tag="Brand"
+                                                  Content="Производителю"/>
+                                    <ComboBoxItem Tag="Category"
+                                                  Content="Категории"/>
+                                    <ComboBoxItem Tag="Subcategory"
+                                                  Content="Подкатегории"/>
+                                </ComboBox>
+                                <Button x:Name="BaitSortButton"
+                                        Width="160"
+                                        Height="36"
+                                        Margin="10,0,0,0"
+                                        Click="SortBaitsClick"
+                                        Content="Сортировать А–Я"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,0,12"
+                                        Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource SmallLabelStyle}"
+                                           Text="Отображать:"/>
+                                <ComboBox x:Name="BaitCategoryFilterBox"
+                                          Width="230"
+                                          Height="36"
+                                          ItemsSource="{Binding BaitCategories}"
+                                          SelectedItem="{Binding SelectedBaitCategoryFilter,
+                                              Mode=TwoWay}"
+                                          ToolTip="Выберите категорию"/>
+                                <ComboBox x:Name="BaitSubcategoryFilterBox"
+                                          Width="210"
+                                          Height="36"
+                                          Margin="10,0,0,0"
+                                          ItemsSource="{Binding BaitSubcategories}"
+                                          SelectedItem="{Binding SelectedBaitSubcategoryFilter,
+                                              Mode=TwoWay}"
+                                          ToolTip="Выберите подкатегорию"/>
+                                <Button Width="150"
+                                        Height="36"
+                                        Margin="10,0,0,0"
+                                        Background="#4E96EF"
+                                        Click="ShowSelectedBaitsClick"
+                                        Content="Показать выбранное"/>
+                                <Button Width="105"
+                                        Height="36"
+                                        Margin="10,0,0,0"
+                                        Click="ShowAllBaitsClick"
+                                        Content="Показать все"/>
+                            </StackPanel>
+
+                            <DataGrid x:Name="BaitCatalogPageGrid"
+                                      MinWidth="1000"
+                                      MinHeight="180"
+                                      MaxHeight="520"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding BaitCatalog}"
+                                      MouseDoubleClick="EditSelectedBaitDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="" Width="76">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Width="56"
+                                                        Height="56"
+                                                        Margin="4"
+                                                        Background="#0E1115"
+                                                        CornerRadius="5">
+                                                    <Image Source="{Binding ImagePath}"
+                                                           Stretch="Uniform"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Название"
+                                                        Width="1.35*"
+                                                        Binding="{Binding DisplayName}"/>
+                                    <DataGridTextColumn Header="Производитель"
+                                                        Width="1*"
+                                                        Binding="{Binding Brand}"/>
+                                    <DataGridTextColumn Header="Категория"
+                                                        Width="1.35*"
+                                                        Binding="{Binding Category}"/>
+                                    <DataGridTextColumn Header="Подкатегория"
+                                                        Width="1.15*"
+                                                        Binding="{Binding Subcategory}"/>
+                                    <DataGridTextColumn Header="Варианты OCR"
+                                                        Width="1.7*"
+                                                        Binding="{Binding Aliases}"/>
+                                    <DataGridCheckBoxColumn Header="Активна"
+                                                            Width="85"
+                                                            Binding="{Binding IsEnabled}"/>
+                                    <DataGridTemplateColumn Header=""
+                                                            Width="130">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Width="105"
+                                                        Height="34"
+                                                        Tag="{Binding}"
+                                                        Click="EditBaitClick"
+                                                        Content="Редактировать"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Margin="0,10,0,0"
+                                       Style="{StaticResource SmallLabelStyle}"
+                                       Text="Двойной щелчок по строке также открывает редактирование."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer
+                x:Name="FishCatalogPage"
+                Grid.Row="1"
+                Padding="30,25,30,24"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock FontSize="29" FontWeight="SemiBold" Text="Каталог рыбы"/>
+                    <TextBlock Margin="0,5,0,20" Style="{StaticResource SmallLabelStyle}"
+                               Text="Локальная энциклопедия рыб: изображения, семейства, места обитания и трофейный вес."/>
+
+                    <Border MaxWidth="760" HorizontalAlignment="Left" Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Height="180" Background="#0E1115" CornerRadius="8">
+                                <Grid>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#697586" FontSize="48" Text="🐟"/>
+                                    <Image Source="{Binding SelectedFishCatalogItem.ImagePath}" Stretch="Uniform"/>
+                                </Grid>
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="24,0,0,0">
+                                <TextBlock Style="{StaticResource SmallLabelStyle}" Text="ВЫБРАННАЯ РЫБА"/>
+                                <TextBlock Margin="0,8,0,4" FontSize="24" FontWeight="Bold" Text="{Binding SelectedFishCatalogItem.Name, TargetNullValue='Выберите рыбу'}"/>
+                                <TextBlock Foreground="#98A3B3" Text="{Binding SelectedFishCatalogItem.Family, TargetNullValue='Семейство не указано'}"/>
+                                <TextBlock Margin="0,3,0,14" Foreground="#98A3B3" Text="{Binding SelectedFishCatalogItem.HabitatDisplay, TargetNullValue='Место обитания не указано'}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Width="155" Height="40" Click="OpenFishProfileClick" Content="Открыть карточку"/>
+                                    <Button Width="205" Height="40" Click="OpenFishCatalogClick" Content="Каталог и редактирование"/>
+                                    <Button Width="145" Height="40" Margin="10,0,0,0" Background="#4E96EF" Click="AddFishClick" Content="Добавить рыбу"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="0,22,0,0" MaxWidth="1100" HorizontalAlignment="Left" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Добавленные рыбы"/>
+                                    <TextBlock Margin="0,4,0,0" Style="{StaticResource SmallLabelStyle}" Text="{Binding FishCatalogCountText}"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Width="170" Height="38" Margin="12,0,0,0" Click="OpenFishCatalogClick" Content="Открыть каталог"/>
+                                <Button Grid.Column="2" Width="160" Height="38" Margin="10,0,0,0" Background="#4E96EF" Click="AddFishClick" Content="+ Добавить рыбу"/>
+                            </Grid>
+                            <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource SmallLabelStyle}" Text="Сортировать по:"/>
+                                <ComboBox x:Name="FishSortFieldBox" Width="190" Height="36" SelectedIndex="0">
+                                    <ComboBoxItem Tag="Name" Content="Названию"/>
+                                    <ComboBoxItem Tag="Family" Content="Семейству"/>
+                                    <ComboBoxItem Tag="Habitat" Content="Месту обитания"/>
+                                    <ComboBoxItem Tag="TrophyWeightGrams" Content="Трофейному весу"/>
+                                </ComboBox>
+                                <Button x:Name="FishSortButton" Width="160" Height="36" Margin="10,0,0,0" Click="SortFishClick" Content="Сортировать А–Я"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource SmallLabelStyle}" Text="Отображать:"/>
+                                <ComboBox x:Name="FishFamilyFilterBox" Width="230" Height="36" ItemsSource="{Binding FishFamilies}" SelectedItem="{Binding SelectedFishFamilyFilter, Mode=TwoWay}"/>
+                                <ComboBox x:Name="FishHabitatFilterBox" Width="230" Height="36" Margin="10,0,0,0" ItemsSource="{Binding FishHabitats}" SelectedItem="{Binding SelectedFishHabitatFilter, Mode=TwoWay}"/>
+                                <Button Width="150" Height="36" Margin="10,0,0,0" Background="#4E96EF" Click="ShowSelectedFishClick" Content="Показать выбранное"/>
+                                <Button Width="105" Height="36" Margin="10,0,0,0" Click="ShowAllFishClick" Content="Показать все"/>
+                            </StackPanel>
+                            <DataGrid x:Name="FishCatalogPageGrid" MinWidth="1000" MinHeight="220" MaxHeight="520" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                                      ItemsSource="{Binding FishCatalog}" SelectedItem="{Binding SelectedFishCatalogItem, Mode=TwoWay}" MouseDoubleClick="EditSelectedFishDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="" Width="76"><DataGridTemplateColumn.CellTemplate><DataTemplate><Border Width="56" Height="56" Margin="4" Background="#0E1115" CornerRadius="5"><Grid><TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#697586" FontSize="22" Text="🐟"/><Image Source="{Binding ImagePath}" Stretch="Uniform"/></Grid></Border></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Название" Width="1.4*" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Семейство" Width="1.15*" Binding="{Binding Family}"/>
+                                    <DataGridTextColumn Header="Место обитания" Width="1.5*" Binding="{Binding HabitatDisplay}"/>
+                                    <DataGridTextColumn Header="Трофейный вес" Width="1*" Binding="{Binding TrophyWeightDisplay}"/>
+                                    <DataGridTextColumn Header="Варианты OCR" Width="1.5*" Binding="{Binding Aliases}"/>
+                                    <DataGridCheckBoxColumn Header="Активна" Width="80" Binding="{Binding IsEnabled}"/>
+                                    <DataGridTemplateColumn Header="" Width="130"><DataGridTemplateColumn.CellTemplate><DataTemplate><Button Width="105" Height="34" Tag="{Binding}" Click="EditFishClick" Content="Редактировать"/></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock Margin="0,10,0,0" Style="{StaticResource SmallLabelStyle}" Text="Выберите строку для просмотра; двойной щелчок открывает редактирование."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+            <Border Grid.Row="2"
+                    Margin="0"
+                    Padding="16,0"
+                    Background="#0E1115"
+                    BorderBrush="#222B35"
+                    BorderThickness="0,1,0,0">
+                <DockPanel LastChildFill="False" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                        <Ellipse Width="7" Height="7" Margin="0,0,7,0" Fill="#72BC8F"/>
+                        <TextBlock FontSize="11" FontWeight="SemiBold" Text="RF4 Assistant Pro"/>
+                        <TextBlock Margin="10,0,0,0" Style="{StaticResource SmallLabelStyle}" Text="•"/>
+                        <TextBlock Margin="7,0,0,0" Style="{StaticResource SmallLabelStyle}" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource SmallLabelStyle}" Text="{Binding GameBindingStatus}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Margin="12,0,0,0" Style="{StaticResource SmallLabelStyle}" Text="{Binding VersionLabel}"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

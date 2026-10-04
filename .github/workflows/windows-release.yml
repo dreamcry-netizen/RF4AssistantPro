@@ -1,0 +1,123 @@
+name: Windows release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  VERSION: "2.3.41"
+  PROJECT: RF4AssistantPro/RF4AssistantPro.csproj
+  TEST_PROJECT: RF4AssistantPro.Tests/RF4AssistantPro.Tests.csproj
+  DIST: dist/RF4AssistantPro_v2.3.41_win-x64
+
+jobs:
+  build:
+    name: Test and publish win-x64
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.401
+          cache: true
+          cache-dependency-path: |
+            **/*.csproj
+            global.json
+
+      - name: Restore tests
+        run: dotnet restore $env:TEST_PROJECT
+
+      - name: Run automated scenarios
+        run: dotnet run --project $env:TEST_PROJECT -c Release --no-restore
+
+      - name: Restore win-x64
+        run: dotnet restore RF4AssistantPro.sln -r win-x64
+
+      - name: Build Release
+        run: dotnet build RF4AssistantPro.sln -c Release --no-restore
+
+      - name: Publish self-contained application
+        shell: pwsh
+        run: |
+          if (Test-Path $env:DIST) {
+            Remove-Item $env:DIST -Recurse -Force
+          }
+          dotnet publish $env:PROJECT `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            --no-restore `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:DebugType=None `
+            -p:DebugSymbols=false `
+            -o $env:DIST
+          Copy-Item Launch/START_RF4_ASSISTANT.cmd $env:DIST
+          Copy-Item Launch/START_DIAGNOSTICS.cmd $env:DIST
+          Copy-Item Launch/README_START.txt $env:DIST
+
+      - name: Verify release contents
+        shell: pwsh
+        run: |
+          $exe = Join-Path $env:DIST "RF4AssistantPro.exe"
+          if (-not (Test-Path $exe)) {
+            throw "RF4AssistantPro.exe was not created."
+          }
+          $models = Get-ChildItem `
+            (Join-Path $env:DIST "Assets/Ocr/Paddle") `
+            -Filter *.onnx
+          if ($models.Count -ne 3) {
+            throw "Expected 3 ONNX models; found $($models.Count)."
+          }
+          $debugFiles = Get-ChildItem $env:DIST `
+            -Recurse -Include *.pdb,*.lib
+          if ($debugFiles.Count -gt 0) {
+            $debugFiles | Remove-Item -Force
+          }
+
+      - name: Create ZIP and SHA-256
+        shell: pwsh
+        run: |
+          $zip = "dist/RF4AssistantPro_v$env:VERSION`_win-x64.zip"
+          if (Test-Path $zip) {
+            Remove-Item $zip -Force
+          }
+          Compress-Archive `
+            -Path $env:DIST `
+            -DestinationPath $zip `
+            -CompressionLevel Optimal
+          $hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+          $name = [IO.Path]::GetFileName($zip)
+          Set-Content -Encoding ascii "$zip.sha256" "$hash  $name"
+
+      - name: Upload Windows release
+        uses: actions/upload-artifact@v4
+        with:
+          name: RF4AssistantPro-v${{ env.VERSION }}-win-x64
+          path: |
+            dist/RF4AssistantPro_v${{ env.VERSION }}_win-x64.zip
+            dist/RF4AssistantPro_v${{ env.VERSION }}_win-x64.zip.sha256
+          if-no-files-found: error
+          retention-days: 30

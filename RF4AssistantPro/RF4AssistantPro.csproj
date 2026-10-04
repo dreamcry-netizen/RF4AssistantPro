@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RF4AssistantPro</RootNamespace>
+    <AssemblyName>RF4AssistantPro</AssemblyName>
+    <Version>2.3.41</Version>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <EnableDefaultApplicationDefinition>true</EnableDefaultApplicationDefinition>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RF4Assistant.Core\RF4Assistant.Core.csproj" />
+    <ProjectReference Include="..\RF4Assistant.Infrastructure\RF4Assistant.Infrastructure.csproj" />
+    <ProjectReference Include="..\RF4Assistant.Windows\RF4Assistant.Windows.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\AppIcon.ico" />
+    <Resource Include="Assets\WaterBodies\Cards\*.png" />
+    <None Include="Assets\AppIcon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Assets\AppIcon.svg</TargetPath>
+    </None>
+    <Content Include="Assets\Baits\worm.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Assets\Baits\worm.png</TargetPath>
+    </Content>
+    <Content Include="Assets\WaterBodies\KomarinoeCard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Assets\WaterBodies\KomarinoeCard.png</TargetPath>
+    </Content>
+    <Content Include="Assets\WaterBodies\KomarinoeBackground.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Assets\WaterBodies\KomarinoeBackground.png</TargetPath>
+    </Content>
+    <Content Include="Assets\Ocr\Paddle\*.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>Assets\Ocr\Paddle\%(Filename)%(Extension)</TargetPath>
+    </Content>
+  </ItemGroup>
+</Project>

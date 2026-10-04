@@ -1,0 +1,229 @@
+<Window
+    x:Class="RF4AssistantPro.Views.WaterBodyGalleryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+    Title="{Binding Name}"
+    Width="1400"
+    Height="760"
+    MinWidth="1040"
+    MinHeight="650"
+    Background="#080A0D"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="None">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            CaptionHeight="42"
+            CornerRadius="10"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="6"
+            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Background="#0E1115"
+            BorderBrush="#222B35"
+            BorderThickness="0,0,0,1"
+            MouseLeftButtonDown="TitleBarMouseLeftButtonDown">
+            <Grid>
+                <StackPanel
+                    Margin="16,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        FontFamily="Segoe MDL2 Assets"
+                        Foreground="#63A8FF"
+                        Text="&#xE707;"/>
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        FontSize="13"
+                        FontWeight="SemiBold"
+                        Text="{Binding Name}"/>
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="#697586"
+                        FontSize="11"
+                        Text="Изображение, уловы и кафе"/>
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                    Orientation="Horizontal">
+                    <Button
+                        Style="{StaticResource FluentIconButtonStyle}"
+                        Click="MinimizeWindowClick"
+                        ToolTip="Свернуть">
+                        <TextBlock FontFamily="Segoe UI" FontSize="13" Text="&#x2014;"/>
+                    </Button>
+                    <Button
+                        Style="{StaticResource FluentIconButtonStyle}"
+                        Click="ToggleMaximizeWindowClick"
+                        ToolTip="Развернуть">
+                        <TextBlock FontFamily="Segoe UI" FontSize="13" Text="&#x25A1;"/>
+                    </Button>
+                    <Button
+                        Style="{StaticResource FluentIconButtonStyle}"
+                        Click="CloseWindowClick"
+                        ToolTip="Закрыть">
+                        <TextBlock FontFamily="Segoe UI" FontSize="16" Text="&#x00D7;"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Background="#080A0D">
+            <Border
+                Margin="16,12,16,204"
+                Background="#080A0D"
+                BorderBrush="#222B35"
+                BorderThickness="1"
+                CornerRadius="9"
+                ClipToBounds="True">
+                <Image Source="{Binding CardImagePath}" Stretch="Uniform"/>
+            </Border>
+
+            <Grid
+                Height="180"
+                Margin="16"
+                VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.08*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="0.92*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Column="0"
+                    Padding="20,16"
+                    Background="{StaticResource OverlayBackgroundBrush}"
+                    BorderBrush="#28313C"
+                    BorderThickness="1"
+                    CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <DockPanel>
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="22"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding Name}"/>
+                                <TextBlock
+                                    Margin="0,3,0,0"
+                                    Foreground="#98A3B3"
+                                    FontSize="12"
+                                    Text="Статистика по локальной истории уловов"/>
+                            </StackPanel>
+                            <TextBlock
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Top"
+                                Foreground="#697586"
+                                FontSize="11"
+                                Text="{Binding Statistics.LastCatchDisplay, StringFormat=Последний улов: {0}}"/>
+                        </DockPanel>
+
+                        <UniformGrid Grid.Row="1" Columns="4" Margin="0,18,0,0">
+                            <StackPanel>
+                                <TextBlock Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="ПОЙМАНО РЫБ"/>
+                                <TextBlock Margin="0,5,0,0" FontSize="23" FontWeight="Bold" Text="{Binding Statistics.CatchCount}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="ВИДОВ РЫБ"/>
+                                <TextBlock Margin="0,5,0,0" FontSize="23" FontWeight="Bold" Text="{Binding Statistics.UniqueFishCount}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="СРЕДНИЙ ВЕС"/>
+                                <TextBlock Margin="0,5,0,0" FontSize="23" FontWeight="Bold" Text="{Binding Statistics.AverageWeightDisplay}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="ЛУЧШИЙ УЛОВ"/>
+                                <TextBlock Margin="0,5,0,0" Foreground="#8FC1FF" FontSize="23" FontWeight="Bold" Text="{Binding Statistics.BestWeightDisplay}"/>
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+                </Border>
+
+                <Border
+                    Grid.Column="2"
+                    Padding="18,14"
+                    Background="{StaticResource OverlayBackgroundBrush}"
+                    BorderBrush="#28313C"
+                    BorderThickness="1"
+                    CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <DockPanel>
+                            <StackPanel>
+                                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding CafeTitle}"/>
+                                <TextBlock Margin="0,3,0,0" Foreground="#98A3B3" FontSize="11" Text="{Binding CafeCapturedAtDisplay}"/>
+                            </StackPanel>
+                            <Border
+                                DockPanel.Dock="Right"
+                                MaxWidth="240"
+                                Padding="9,5"
+                                VerticalAlignment="Top"
+                                Background="#182C24"
+                                CornerRadius="10">
+                                <TextBlock Foreground="#72BC8F" FontSize="11" FontWeight="SemiBold" Text="{Binding CafeStatusDisplay}" TextWrapping="Wrap"/>
+                            </Border>
+                        </DockPanel>
+
+                        <Grid Grid.Row="1" Margin="0,10,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="105"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="РЫБА"/>
+                            <TextBlock Grid.Column="1" Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="МИН. ВЕС"/>
+                            <TextBlock Grid.Column="2" Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="ПРОГРЕСС"/>
+                            <TextBlock Grid.Column="3" Foreground="#697586" FontSize="10" FontWeight="SemiBold" Text="НАГРАДА"/>
+                        </Grid>
+
+                        <ScrollViewer
+                            Grid.Row="2"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto"
+                            CanContentScroll="True">
+                            <ItemsControl ItemsSource="{Binding CafeOffers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="105"/>
+                                                <ColumnDefinition Width="70"/>
+                                                <ColumnDefinition Width="70"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock FontSize="12" FontWeight="SemiBold" Text="{Binding FishName}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="1" Foreground="#98A3B3" FontSize="11" Text="{Binding MinimumWeightDisplay}"/>
+                                            <TextBlock Grid.Column="2" Foreground="#8FC1FF" FontSize="11" FontWeight="SemiBold" Text="{Binding ProgressDisplay}"/>
+                                            <TextBlock Grid.Column="3" Foreground="#EAC26B" FontSize="11" Text="{Binding PriceDisplay}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

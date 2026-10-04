@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">RF4 Assistant — Волна и улов</title>
+  <desc id="desc">Синий круг с белой рыбой и волной</desc>
+  <defs><linearGradient id="g" x1="26" y1="18" x2="226" y2="238" gradientUnits="userSpaceOnUse"><stop stop-color="#5E9FE8"/><stop offset="1" stop-color="#2783DE"/></linearGradient></defs>
+  <circle cx="128" cy="128" r="112" fill="url(#g)"/>
+  <path d="M51 149c17-22 35-33 54-33 26 0 43 18 61 18 15 0 28-7 39-20-5 30-27 52-56 52-24 0-39-16-58-16-14 0-27 5-40 16z" fill="#fff" opacity=".98"/>
+  <circle cx="106" cy="132" r="5" fill="#2783DE"/>
+  <path d="M73 148c19 19 38 28 60 28 21 0 40-8 57-24" fill="none" stroke="#DDF0FF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M177 99l25 15-25 15 6-15z" fill="#fff"/>
+</svg>
